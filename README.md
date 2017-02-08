@@ -87,6 +87,12 @@ Clear the drawing.
 // Clears only drawing
 [self.jotViewController clearDrawing];
 ```
+Undo drawing.
+
+```objc
+// Undo drawing
+[self.jotViewController undo];
+```
 
 ### Image Output
 
