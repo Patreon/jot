@@ -6,7 +6,7 @@
 
 `jot` is an easy way to add touch-controlled drawings and text to images in your iOS app.
 
-![FastttCamera](./Docs/jot-demo.gif)
+![FastttCamera](./Docs/jot-demo.gif)![NewFeatures](./Docs/jot-new-feature.png)
 ## New features added
 - Undo drawing (Erase last stroke).
 - Erasing drawing (Applying clear color).
