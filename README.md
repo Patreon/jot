@@ -24,7 +24,7 @@
 it, simply add the following line to your `Podfile`:
 
 ```
-pod "jot"
+pod "jot", :git => 'https://github.com/hilalbaig/jot.git' 
 ```
 
 ## Example Project
@@ -93,6 +93,17 @@ Undo drawing.
 // Undo drawing
 [self.jotViewController undo];
 ```
+ 
+Erasing drawing.
+ 
+ ```objc
+ // Enable Erasing mode
+ [self.jotViewController startErasingDrawing];
+ 
+ // Disable Erasing mode
+ [self.jotViewController startErasingDrawing];
+ ```
+
 
 ### Image Output
 
@@ -201,7 +212,10 @@ self.jotViewController.clipBoundsToEditingInsets = YES;
 
 ## Contributors
 
-* [Laura Skelton](https://github.com/lauraskelton), creator.
+ * [Laura Skelton](https://github.com/lauraskelton), creator.
+ * [Hilal Baig](https://github.com/hilalbaig), contributor.
+ * [Tres Wong-Godfrey](https://github.com/tres), contributor.
+ * [Matt Moss](https://github.com/matthewmoss), contributor.
 
 ## License
 

@@ -181,6 +181,17 @@ typedef NS_ENUM(NSUInteger, JotViewState){
 - (void)clearText;
 
 /**
+ * Enter 'Erase' mode. User touch interaction will erase drawing
+ */
+- (void)startErasingDrawing;
+
+/**
+ * Enter normal drawing mode
+ */
+- (void)endErasingDrawing;
+
+
+/**
  *  Overlays the drawing and text on the given background image at the full
  *  resolution of the image.
  *

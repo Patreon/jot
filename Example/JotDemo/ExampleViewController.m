@@ -16,12 +16,23 @@ NSString * const kTextImageName = @"";
 NSString * const kClearImageName = @"";
 NSString * const kSaveImageName = @"";
 
+NSString * const kEraseImageName = @"🔘";
+
+
+ 
+
 @interface ExampleViewController () <JotViewControllerDelegate>
 
 @property (nonatomic, strong) JotViewController *jotViewController;
 @property (nonatomic, strong) UIButton *saveButton;
 @property (nonatomic, strong) UIButton *clearButton;
 @property (nonatomic, strong) UIButton *toggleDrawingButton;
+@property (nonatomic, strong) UIButton *undoButton;
+@property (nonatomic, strong) UIButton *eraseButton;
+
+
+@property (nonatomic, assign) BOOL isEraseModeEnabled;
+
 
 @end
 
@@ -29,6 +40,8 @@ NSString * const kSaveImageName = @"";
 
 - (instancetype)init
 {
+    NSLog(kClearImageName);
+    
     if ((self = [super init])) {
         
         _jotViewController = [JotViewController new];
@@ -70,6 +83,29 @@ NSString * const kSaveImageName = @"";
         [self.toggleDrawingButton addTarget:self
                                      action:@selector(toggleDrawingButtonAction)
                            forControlEvents:UIControlEventTouchUpInside];
+        
+        
+        
+        _undoButton = [UIButton new];
+        self.undoButton.titleLabel.font = [UIFont fontWithName:@"Baskerville-Bold" size:20.f];
+        [self.undoButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
+        [self.undoButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
+        [self.undoButton setTitle:@"Undo" forState:UIControlStateNormal];
+        [self.undoButton addTarget:self
+                            action:@selector(undoButtonAction)
+                  forControlEvents:UIControlEventTouchUpInside];
+        
+        _eraseButton = [UIButton new];
+        self.eraseButton.titleLabel.font = [UIFont fontWithName:@"Baskerville-Bold" size:20.f];
+        [self.eraseButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
+        [self.eraseButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
+        [self.eraseButton setTitle:@"Switch to Eraser Mode" forState:UIControlStateNormal];
+        [self.eraseButton addTarget:self
+                            action:@selector(eraseButtonAction)
+                  forControlEvents:UIControlEventTouchUpInside];
+        
+        
+        
     }
     
     return self;
@@ -108,6 +144,26 @@ NSString * const kSaveImageName = @"";
         make.right.equalTo(self.view).offset(-4.f);
         make.bottom.equalTo(self.view).offset(-4.f);
     }];
+
+    [self.view addSubview:self.undoButton];
+    [self.undoButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.width.equalTo(@52);
+        make.height.equalTo(@44);
+        make.left.equalTo(self.view).offset(14.f);
+        make.bottom.equalTo(self.view).offset(-4.f);
+    }];
+    
+    
+    [self.view addSubview:self.eraseButton];
+    [self.eraseButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.width.equalTo(@214);
+        make.height.equalTo(@44);
+        make.centerX.equalTo(self.view);
+        make.top.equalTo(self.view).offset(10.f);
+    }];
+
+
+
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -162,6 +218,27 @@ NSString * const kSaveImageName = @"";
         [self.toggleDrawingButton setTitle:kTextImageName forState:UIControlStateNormal];
     }
 }
+
+
+- (void)undoButtonAction
+{
+    [self.jotViewController undo];
+}
+
+-(void)eraseButtonAction
+{
+    
+    if (_isEraseModeEnabled) {
+        [self.eraseButton setTitle:@"Switch to Eraser Mode" forState:UIControlStateNormal];
+        [self.jotViewController endErasingDrawing];
+    } else {
+        [self.eraseButton setTitle:@"Switch to Pen Mode" forState:UIControlStateNormal];
+        [self.jotViewController startErasingDrawing];
+    }
+    
+    _isEraseModeEnabled = !_isEraseModeEnabled;
+}
+
 
 #pragma mark - JotViewControllerDelegate
 
