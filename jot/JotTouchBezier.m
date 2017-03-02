@@ -48,6 +48,14 @@ static inline CGFloat pointLength(const CGPoint point1, const CGPoint point2){
       
         CGFloat drawSteps = MAX(MIN(length,kJotDrawStepsPerBezier),10);
       
+        CGContextRef context = UIGraphicsGetCurrentContext();
+        if (!context) {
+          return;
+        }
+      
+        // Set shadow makes bezier path more smoothly
+        CGContextSetShadowWithColor(context, CGSizeMake(0, 0), kJotBezierShadow, self.strokeColor.CGColor);
+      
         for (NSUInteger i = 0; i < drawSteps; i++) {
         
             CGFloat t = ((CGFloat)i) / (CGFloat)drawSteps;
@@ -80,7 +88,7 @@ static inline CGFloat pointLength(const CGPoint point1, const CGPoint point2){
         CGPoint controlPoint2 = CGPointMake(self.controlPoint2.x, self.controlPoint2.y + span);
         CGPoint endPoint = CGPointMake(self.endPoint.x, self.endPoint.y + span);
       
-        CGContextRef context = UIGraphicsGetCurrentContext();
+        [self.strokeColor setStroke];
         CGContextSetLineWidth(context, minWidth);
         CGContextSetAllowsAntialiasing(context, true);
         CGContextSetLineCap(context, kCGLineCapRound);
@@ -103,8 +111,6 @@ static inline CGFloat pointLength(const CGPoint point1, const CGPoint point2){
         return;
     }
   
-    // Set shadow makes bezier path more smoothly
-    CGContextSetShadow(context, CGSizeMake(0, 0), kJotBezierShadow);
     CGContextFillEllipseInRect(context, CGRectInset(CGRectMake(point.x, point.y, 0.f, 0.f), -width / 2.f, -width / 2.f));
 }
 
