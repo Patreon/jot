@@ -104,6 +104,6 @@
  *
  *  @param textString    The new text string after editing
  */
-- (void)jotTextEditViewFinishedEditingWithNewTextString:(NSString *)textString;
+- (void)jotTextEditViewFinishedEditingWithNewTextString:(NSString *)textString withColor:(UIColor*)textColor;
 
 @end

@@ -392,14 +392,16 @@
 
 #pragma mark - JotTextEditView Delegate
 
-- (void)jotTextEditViewFinishedEditingWithNewTextString:(NSString *)textString
+- (void)jotTextEditViewFinishedEditingWithNewTextString:(NSString *)textString withColor:(UIColor *)textColor
 {
     if (self.state == JotViewStateEditingText) {
         self.state = JotViewStateText;
     }
     
     self.textString = textString;
-    
+    self.textColor = textColor;
+
+  
     if ([self.delegate respondsToSelector:@selector(jotViewController:isEditingText:)]) {
         [self.delegate jotViewController:self isEditingText:NO];
     }

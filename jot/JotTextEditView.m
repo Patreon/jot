@@ -7,6 +7,7 @@
 //
 
 #import "JotTextEditView.h"
+#import "CircleLineButton.h"
 #import <Masonry/Masonry.h>
 
 @interface JotTextEditView () <UITextViewDelegate>
@@ -39,7 +40,7 @@
             make.top.and.left.and.right.equalTo(self);
             make.bottom.equalTo(self).offset(0.f);
         }];
-        
+      
         _textView = [UITextView new];
         self.textView.backgroundColor = [UIColor clearColor];
         self.textView.text = self.textString;
@@ -54,6 +55,27 @@
         
         self.textContainer.hidden = YES;
         self.userInteractionEnabled = NO;
+      
+        UIToolbar *colorSelector = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, self.textView.frame.size.width, 50)];
+        [colorSelector setBackgroundImage:[UIImage new]
+                    forToolbarPosition:UIBarPositionAny
+                            barMetrics:UIBarMetricsDefault];
+        [colorSelector setShadowImage:[UIImage new]
+                forToolbarPosition:UIBarPositionAny];
+      
+        NSArray *colors = @[[UIColor whiteColor],[UIColor blackColor],[UIColor redColor],[UIColor cyanColor],[UIColor magentaColor],[UIColor orangeColor],[UIColor blueColor],[UIColor purpleColor]];
+        NSMutableArray *colorSelectorItems = [[NSMutableArray alloc] init];
+        for (UIColor *color in colors) {
+            CircleLineButton* button = [[CircleLineButton alloc] initWithFrame:CGRectMake(0,0,25,25)];
+            [button drawCircleButton:color withStroke:[UIColor whiteColor]];
+            [button addTarget:self action:@selector(changeTextColor:) forControlEvents:UIControlEventTouchDown];
+            UIView *buttonView = [[UIView alloc] initWithFrame:CGRectMake(0,0,30,25)];
+            [buttonView addSubview:button];
+            [colorSelectorItems addObject:[[UIBarButtonItem alloc] initWithCustomView:buttonView]];
+        }
+        [colorSelector setItems:colorSelectorItems animated:NO];
+        [colorSelector sizeToFit];
+        self.textView.inputAccessoryView = colorSelector;
         
         [[NSNotificationCenter defaultCenter] addObserverForName:UIKeyboardWillChangeFrameNotification
                                                           object:nil
@@ -164,8 +186,8 @@
             self.backgroundColor = [UIColor clearColor];
             _textString = self.textView.text;
             [self.textView resignFirstResponder];
-            if ([self.delegate respondsToSelector:@selector(jotTextEditViewFinishedEditingWithNewTextString:)]) {
-                [self.delegate jotTextEditViewFinishedEditingWithNewTextString:_textString];
+            if ([self.delegate respondsToSelector:@selector(jotTextEditViewFinishedEditingWithNewTextString:withColor:)]) {
+                [self.delegate jotTextEditViewFinishedEditingWithNewTextString:_textString withColor:_textColor];
             }
         }
     }
@@ -242,6 +264,14 @@
     }
     
     return YES;
+}
+
+#pragma mark - Change text color
+
+- (void)changeTextColor:(id)sender
+{
+    CircleLineButton *button = (CircleLineButton *)sender;
+    self.textColor = button.color; // let's just use the UIColor available in UIBarButtonItem
 }
 
 @end
