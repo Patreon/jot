@@ -93,6 +93,11 @@ typedef NS_ENUM(NSUInteger, JotViewState){
 @property (nonatomic, strong) UIColor *textColor;
 
 /**
+ *  The color of the text displayed in the JotTextView and the JotTextEditView.
+ */
+@property (nonatomic, strong) UIColor *backgroundColor;
+
+/**
  *  The text string the JotTextView and JotTextEditView are displaying.
  */
 @property (nonatomic, strong) NSString *textString;

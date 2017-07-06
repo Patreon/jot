@@ -8,7 +8,10 @@
 
 #import "JotTextEditView.h"
 #import "CircleLineButton.h"
+#import "TextColorModeButton.h"
 #import <Masonry/Masonry.h>
+
+#import "UIColor+Jot.h"
 
 @interface JotTextEditView () <UITextViewDelegate>
 
@@ -17,6 +20,7 @@
 @property (nonatomic, strong) CAGradientLayer *gradientMask;
 @property (nonatomic, strong) CAGradientLayer *topGradient;
 @property (nonatomic, strong) CAGradientLayer *bottomGradient;
+@property (nonatomic, strong) TextColorModeButton *backgroundColorMode;
 
 @end
 
@@ -40,42 +44,60 @@
             make.top.and.left.and.right.equalTo(self);
             make.bottom.equalTo(self).offset(0.f);
         }];
+        
+        self.backgroundColor = [UIColor whiteColor];
       
         _textView = [UITextView new];
-        self.textView.backgroundColor = [UIColor clearColor];
+        self.textView.backgroundColor = self.backgroundColor;
+        self.textColor = [UIColor blackColor];
         self.textView.text = self.textString;
         self.textView.keyboardType = UIKeyboardTypeDefault;
         self.textView.returnKeyType = UIReturnKeyDone;
         self.textView.clipsToBounds = NO;
+        self.textView.scrollEnabled = NO;
         self.textView.delegate = self;
+        self.textView.layer.cornerRadius = 5;
         [self.textContainer addSubview:self.textView];
         [self.textView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.edges.equalTo(self.textContainer).insets(_textEditingInsets);
+            make.centerX.equalTo(self.mas_centerX);
+            //make.centerY.equalTo(self.mas_centerY);
+            make.width.mas_lessThanOrEqualTo(self.mas_width);
         }];
         
         self.textContainer.hidden = YES;
         self.userInteractionEnabled = NO;
       
-        UIToolbar *colorSelector = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, self.textView.frame.size.width, 50)];
+        UIToolbar *colorSelector = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, self.textView.frame.size.width, 60)];
         [colorSelector setBackgroundImage:[UIImage new]
                     forToolbarPosition:UIBarPositionAny
                             barMetrics:UIBarMetricsDefault];
         [colorSelector setShadowImage:[UIImage new]
                 forToolbarPosition:UIBarPositionAny];
       
-        NSArray *colors = @[[UIColor whiteColor],[UIColor blackColor],[UIColor redColor],[UIColor cyanColor],[UIColor magentaColor],[UIColor orangeColor],[UIColor blueColor],[UIColor purpleColor]];
+        NSArray *colors = @[[UIColor whiteColor],[UIColor jotBlack],[UIColor jotBlue],[UIColor jotGreen],[UIColor jotYellow],[UIColor jotCoral],[UIColor jotPurple]];
         NSMutableArray *colorSelectorItems = [[NSMutableArray alloc] init];
         for (UIColor *color in colors) {
-            CircleLineButton* button = [[CircleLineButton alloc] initWithFrame:CGRectMake(0,0,25,25)];
-            [button drawCircleButton:color withStroke:[UIColor whiteColor]];
-            [button addTarget:self action:@selector(changeTextColor:) forControlEvents:UIControlEventTouchDown];
-            UIView *buttonView = [[UIView alloc] initWithFrame:CGRectMake(0,0,30,25)];
-            [buttonView addSubview:button];
+            CircleLineButton *colorButton = [[CircleLineButton alloc] initWithFrame:CGRectMake(0,0,35,35)];
+            [colorButton drawCircleButton:color withStroke:[UIColor whiteColor]];
+            [colorButton addTarget:self action:@selector(changeTextColor:) forControlEvents:UIControlEventTouchDown];
+            UIView *buttonView = [[UIView alloc] initWithFrame:CGRectMake(0,0,40,40)];
+            [buttonView addSubview:colorButton];
             [colorSelectorItems addObject:[[UIBarButtonItem alloc] initWithCustomView:buttonView]];
         }
         [colorSelector setItems:colorSelectorItems animated:NO];
         [colorSelector sizeToFit];
         self.textView.inputAccessoryView = colorSelector;
+        
+        self.backgroundColorMode = [[TextColorModeButton alloc] init];
+        self.backgroundColorMode.hidden = YES;
+        [self addSubview:self.backgroundColorMode];
+        [self.backgroundColorMode addTarget:self action:@selector(changeBackgroundColor:) forControlEvents:UIControlEventTouchDown];
+        [self.backgroundColorMode mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self).offset(20.f);
+            make.centerX.equalTo(self.mas_centerX);
+            make.width.equalTo(@30);
+            make.height.equalTo(@30);
+        }];
         
         [[NSNotificationCenter defaultCenter] addObserverForName:UIKeyboardWillChangeFrameNotification
                                                           object:nil
@@ -91,6 +113,12 @@
                                                               make.bottom.equalTo(self).offset(-CGRectGetHeight(keyboardRectEnd));
                                                           }];
                                                           
+                                                          CGFloat centerAboveKeyboard = keyboardRectEnd.origin.y / 2;
+                                                          
+                                                          [self.textView mas_makeConstraints:^(MASConstraintMaker *make) {
+                                                              make.top.equalTo(@(centerAboveKeyboard));
+                                                            }];
+
                                                           [UIView animateWithDuration:duration
                                                                                 delay:0.f
                                                                               options:UIViewAnimationOptionBeginFromCurrentState
@@ -164,6 +192,14 @@
     }
 }
 
+- (void)setBackgroundColor:(UIColor *)backgroundColor
+{
+    if (_backgroundColor != backgroundColor) {
+        _backgroundColor = backgroundColor;
+        self.textView.backgroundColor = backgroundColor;
+    }
+}
+
 - (void)setClipBoundsToEditingInsets:(BOOL)clipBoundsToEditingInsets
 {
     if (_clipBoundsToEditingInsets != clipBoundsToEditingInsets) {
@@ -178,16 +214,15 @@
     if (_isEditing != isEditing) {
         _isEditing = isEditing;
         self.textContainer.hidden = !isEditing;
+        self.backgroundColorMode.hidden = !isEditing;
         self.userInteractionEnabled = isEditing;
         if (isEditing) {
-            self.backgroundColor = [UIColor colorWithWhite:0.f alpha:0.5f];
             [self.textView becomeFirstResponder];
         } else {
-            self.backgroundColor = [UIColor clearColor];
             _textString = self.textView.text;
             [self.textView resignFirstResponder];
-            if ([self.delegate respondsToSelector:@selector(jotTextEditViewFinishedEditingWithNewTextString:withColor:)]) {
-                [self.delegate jotTextEditViewFinishedEditingWithNewTextString:_textString withColor:_textColor];
+            if ([self.delegate respondsToSelector:@selector(jotTextEditViewFinishedEditingWithNewTextString:withTextColor:withBackgroundColor:hasTransparency:)]) {
+                [self.delegate jotTextEditViewFinishedEditingWithNewTextString:_textString withTextColor:_textColor withBackgroundColor:_backgroundColor hasTransparency:YES];
             }
         }
     }
@@ -271,7 +306,70 @@
 - (void)changeTextColor:(id)sender
 {
     CircleLineButton *button = (CircleLineButton *)sender;
-    self.textColor = button.color; // let's just use the UIColor available in UIBarButtonItem
+    
+    switch (self.backgroundColorMode.colorMode) {
+        case JOTTextColorModeOpaqueBackground:
+            if ([button.color isEqual:[UIColor whiteColor]]) {
+                self.textColor = [UIColor jotBlack];
+            } else {
+                self.textColor = [UIColor whiteColor];
+            }
+            
+            //self.textView.backgroundColor = [self.textView.backgroundColor colorWithAlphaComponent:1.0];
+            self.backgroundColor = [button.color colorWithAlphaComponent:1.0];
+            break;
+        
+        case JOTTextColorModeTransparentBackground:
+            if ([button.color isEqual:[UIColor whiteColor]]) {
+                self.textColor = [UIColor jotBlack];
+            } else {
+                self.textColor = [UIColor whiteColor];
+            }
+            
+            self.backgroundColor = [button.color colorWithAlphaComponent:0.5];
+            break;
+
+        case JOTTextColorModeClearBackground:
+            self.backgroundColor = [button.color colorWithAlphaComponent:0];
+            self.textColor = button.color;
+            break;
+            
+        default:
+            break;
+    }
+
+}
+
+- (void)changeBackgroundColor:(id)sender
+{
+    [self.backgroundColorMode switchToNextColorMode];
+    
+    switch (self.backgroundColorMode.colorMode) {
+        case JOTTextColorModeOpaqueBackground:
+            self.textColor = [UIColor jotBlack];
+            self.backgroundColor = [UIColor.whiteColor colorWithAlphaComponent:1.0];
+            break;
+            
+        case JOTTextColorModeTransparentBackground:
+            self.backgroundColor = [self.textView.backgroundColor colorWithAlphaComponent:0.5];
+            self.textColor = [UIColor whiteColor];
+            break;
+            
+        case JOTTextColorModeClearBackground:
+            self.backgroundColor = [self.textView.backgroundColor colorWithAlphaComponent:0];
+            break;
+            
+        default:
+            break;
+    }
+    
+}
+
+#pragma mark - Change textView sizing when text changess
+
+- (void)textViewDidChange:(UITextView *)textView
+{
+    [textView sizeToFit];
 }
 
 @end

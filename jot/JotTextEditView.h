@@ -51,6 +51,14 @@
 @property (nonatomic, strong) UIColor *textColor;
 
 /**
+ *  The background color displayed in the JotTextEditView.
+ *
+ *  @note Set textColor in JotViewController
+ *  to control this property.
+ */
+@property (nonatomic, strong) UIColor *backgroundColor;
+
+/**
  *  The font of the text displayed in the JotTextEditView.
  *
  *  @note Set font in JotViewController to control this property.
@@ -104,6 +112,6 @@
  *
  *  @param textString    The new text string after editing
  */
-- (void)jotTextEditViewFinishedEditingWithNewTextString:(NSString *)textString withColor:(UIColor*)textColor;
+- (void)jotTextEditViewFinishedEditingWithNewTextString:(NSString *)textString withTextColor:(UIColor*)textColor withBackgroundColor:(UIColor*)backgroundColor hasTransparency:(BOOL)hasTransparency;
 
 @end
