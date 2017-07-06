@@ -9,6 +9,7 @@
 #import "JotTextEditView.h"
 #import "CircleLineButton.h"
 #import "TextColorModeButton.h"
+#import "TextAlignmentButton.h"
 #import <Masonry/Masonry.h>
 
 #import "UIColor+Jot.h"
@@ -21,6 +22,7 @@
 @property (nonatomic, strong) CAGradientLayer *topGradient;
 @property (nonatomic, strong) CAGradientLayer *bottomGradient;
 @property (nonatomic, strong) TextColorModeButton *backgroundColorMode;
+@property (nonatomic, strong) TextAlignmentButton *textAlignmentButton;
 
 @end
 
@@ -67,7 +69,7 @@
         self.textContainer.hidden = YES;
         self.userInteractionEnabled = NO;
       
-        UIToolbar *colorSelector = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, self.textView.frame.size.width, 60)];
+        UIToolbar *colorSelector = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, self.textView.frame.size.width, 80)];
         [colorSelector setBackgroundImage:[UIImage new]
                     forToolbarPosition:UIBarPositionAny
                             barMetrics:UIBarMetricsDefault];
@@ -85,11 +87,11 @@
             [colorSelectorItems addObject:[[UIBarButtonItem alloc] initWithCustomView:buttonView]];
         }
         [colorSelector setItems:colorSelectorItems animated:NO];
-        [colorSelector sizeToFit];
         self.textView.inputAccessoryView = colorSelector;
         
         self.backgroundColorMode = [[TextColorModeButton alloc] init];
         self.backgroundColorMode.hidden = YES;
+        self.backgroundColorMode.enabled = NO;
         [self addSubview:self.backgroundColorMode];
         [self.backgroundColorMode addTarget:self action:@selector(changeBackgroundColor:) forControlEvents:UIControlEventTouchDown];
         [self.backgroundColorMode mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -97,6 +99,18 @@
             make.centerX.equalTo(self.mas_centerX);
             make.width.equalTo(@30);
             make.height.equalTo(@30);
+        }];
+        
+        self.textAlignmentButton = [[TextAlignmentButton alloc] init];
+        self.textAlignmentButton.hidden = YES;
+        self.textAlignmentButton.enabled = NO;
+        [self addSubview:self.textAlignmentButton];
+        [self.textAlignmentButton addTarget:self action:@selector(changeTextAlignment) forControlEvents:UIControlEventTouchDown];
+        [self.textAlignmentButton mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.backgroundColorMode.mas_bottom).offset(16.f);
+            make.centerX.equalTo(self.mas_centerX);
+            make.width.equalTo(@32);
+            make.height.equalTo(@20);
         }];
         
         [[NSNotificationCenter defaultCenter] addObserverForName:UIKeyboardWillChangeFrameNotification
@@ -215,14 +229,17 @@
         _isEditing = isEditing;
         self.textContainer.hidden = !isEditing;
         self.backgroundColorMode.hidden = !isEditing;
+        self.backgroundColorMode.enabled = isEditing;
+        self.textAlignmentButton.hidden = !isEditing;
+        self.textAlignmentButton.enabled = isEditing;
         self.userInteractionEnabled = isEditing;
         if (isEditing) {
             [self.textView becomeFirstResponder];
         } else {
             _textString = self.textView.text;
             [self.textView resignFirstResponder];
-            if ([self.delegate respondsToSelector:@selector(jotTextEditViewFinishedEditingWithNewTextString:withTextColor:withBackgroundColor:hasTransparency:)]) {
-                [self.delegate jotTextEditViewFinishedEditingWithNewTextString:_textString withTextColor:_textColor withBackgroundColor:_backgroundColor hasTransparency:YES];
+            if ([self.delegate respondsToSelector:@selector(jotTextEditViewFinishedEditingWithNewTextString:withTextColor:withBackgroundColor:withTextAlignment:)]) {
+                [self.delegate jotTextEditViewFinishedEditingWithNewTextString:_textString withTextColor:_textColor withBackgroundColor:_backgroundColor withTextAlignment:self.textAlignment];
             }
         }
     }
@@ -363,6 +380,27 @@
             break;
     }
     
+}
+
+- (void)changeTextAlignment {
+    [self.textAlignmentButton switchToNextTextAlignment];
+    
+    switch (self.textAlignmentButton.textAlignment) {
+        case JOTTextAlignmentCenter:
+            self.textAlignment = NSTextAlignmentCenter;
+            break;
+            
+        case JOTTextAlignmentRight:
+            self.textAlignment = NSTextAlignmentRight;
+            break;
+            
+        case JOTTextAlignmentLeft:
+            self.textAlignment = NSTextAlignmentLeft;
+            break;
+            
+        default:
+            break;
+    }
 }
 
 #pragma mark - Change textView sizing when text changess

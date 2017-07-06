@@ -400,7 +400,7 @@
 
 #pragma mark - JotTextEditView Delegate
 
-- (void)jotTextEditViewFinishedEditingWithNewTextString:(NSString *)textString withTextColor:(UIColor*)textColor withBackgroundColor:(UIColor*)backgroundColor hasTransparency:(BOOL)hasTransparency
+- (void)jotTextEditViewFinishedEditingWithNewTextString:(NSString *)textString withTextColor:(UIColor*)textColor withBackgroundColor:(UIColor*)backgroundColor withTextAlignment:(NSTextAlignment)textAlignment
 {
     if (self.state == JotViewStateEditingText) {
         self.state = JotViewStateText;
@@ -409,6 +409,7 @@
     self.textString = textString;
     self.textColor = textColor;
     self.backgroundColor = backgroundColor;
+    self.textAlignment = textAlignment;
   
     if ([self.delegate respondsToSelector:@selector(jotViewController:isEditingText:)]) {
         [self.delegate jotViewController:self isEditingText:NO];

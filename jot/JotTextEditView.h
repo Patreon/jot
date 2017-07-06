@@ -112,6 +112,6 @@
  *
  *  @param textString    The new text string after editing
  */
-- (void)jotTextEditViewFinishedEditingWithNewTextString:(NSString *)textString withTextColor:(UIColor*)textColor withBackgroundColor:(UIColor*)backgroundColor hasTransparency:(BOOL)hasTransparency;
+- (void)jotTextEditViewFinishedEditingWithNewTextString:(NSString *)textString withTextColor:(UIColor*)textColor withBackgroundColor:(UIColor*)backgroundColor withTextAlignment:(NSTextAlignment)textAlignment;
 
 @end
