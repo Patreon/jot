@@ -46,6 +46,8 @@
         self.textLabel.font = self.font;
         self.textLabel.textColor = self.textColor;
         self.textLabel.textAlignment = self.textAlignment;
+        self.textLabel.clipsToBounds = YES;
+        self.textLabel.layer.cornerRadius = 5;
         self.textLabel.center = CGPointMake(CGRectGetMidX([UIScreen mainScreen].bounds),
                                             CGRectGetMidY([UIScreen mainScreen].bounds));
         self.referenceCenter = CGPointZero;
@@ -160,6 +162,14 @@
     if (_textColor != textColor) {
         _textColor = textColor;
         self.textLabel.textColor = textColor;
+    }
+}
+
+- (void)setBackgroundColor:(UIColor *)backgroundColor
+{
+    if (_backgroundColor != backgroundColor) {
+        _backgroundColor = backgroundColor;
+        self.textLabel.backgroundColor = backgroundColor;
     }
 }
 

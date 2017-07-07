@@ -27,7 +27,7 @@
   UIBezierPath *path = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(0, 0, CGRectGetWidth(self.frame), CGRectGetHeight(self.frame))];
   [self.circleLayer setPath:[path CGPath]];
   [self.circleLayer setStrokeColor:[strokeColor CGColor]];
-  [self.circleLayer setLineWidth:2.0f];
+  [self.circleLayer setLineWidth:6.0f];
   [self.circleLayer setFillColor:[color CGColor]];
   
   [[self layer] addSublayer:self.circleLayer];

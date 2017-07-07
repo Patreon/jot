@@ -49,7 +49,7 @@
         _textAlignment = self.textView.textAlignment;
         self.textEditView.textAlignment = NSTextAlignmentLeft;
         _textColor = self.textView.textColor;
-        self.textEditView.textColor = self.textColor;
+        self.textEditView.textColor = [UIColor blackColor];
         _textString = @"";
         _drawingColor = self.drawView.strokeColor;
         _drawingStrokeWidth = self.drawView.strokeWidth;
@@ -181,6 +181,14 @@
         _textColor = textColor;
         self.textView.textColor =
         self.textEditView.textColor = textColor;
+    }
+}
+
+- (void)setBackgroundColor:(UIColor *)backgroundColor
+{
+    if (_backgroundColor != backgroundColor) {
+        _backgroundColor = backgroundColor;
+        self.textView.backgroundColor = backgroundColor;
     }
 }
 
@@ -392,7 +400,7 @@
 
 #pragma mark - JotTextEditView Delegate
 
-- (void)jotTextEditViewFinishedEditingWithNewTextString:(NSString *)textString withColor:(UIColor *)textColor
+- (void)jotTextEditViewFinishedEditingWithNewTextString:(NSString *)textString withTextColor:(UIColor*)textColor withBackgroundColor:(UIColor*)backgroundColor withTextAlignment:(NSTextAlignment)textAlignment
 {
     if (self.state == JotViewStateEditingText) {
         self.state = JotViewStateText;
@@ -400,7 +408,8 @@
     
     self.textString = textString;
     self.textColor = textColor;
-
+    self.backgroundColor = backgroundColor;
+    self.textAlignment = textAlignment;
   
     if ([self.delegate respondsToSelector:@selector(jotViewController:isEditingText:)]) {
         [self.delegate jotViewController:self isEditingText:NO];

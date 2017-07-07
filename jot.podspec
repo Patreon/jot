@@ -18,5 +18,6 @@ Pod::Spec.new do |s|
 
   s.dependency		  'Masonry', '~> 0.6.1'
   s.source_files	= 'jot/*.{h,m}'
-  
+  s.resources = 'jot/jot.bundle'
+
 end

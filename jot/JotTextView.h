@@ -33,6 +33,14 @@
 @property (nonatomic, strong) UIColor *textColor;
 
 /**
+ *  The color of the text background in the JotTextView.
+ *
+ *  @note Set textBackground in JotViewController
+ *  to control this property.
+ */
+@property (nonatomic, strong) UIColor *backgroundColor;
+
+/**
  *  The font of the text displayed in the JotTextView.
  *
  *  @note Set font in JotViewController to control this property.
