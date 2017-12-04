@@ -95,7 +95,12 @@
         [self addSubview:self.backgroundColorMode];
         [self.backgroundColorMode addTarget:self action:@selector(changeBackgroundColor:) forControlEvents:UIControlEventTouchDown];
         [self.backgroundColorMode mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(self).offset(20.f);
+            // Respect safeArea on iOS11
+            if (@available(iOS 11.0, *)) {
+              make.top.equalTo(self.mas_safeAreaLayoutGuideTop).offset(20.f);
+            } else {
+              make.top.equalTo(self).offset(20.f);
+            }
             make.centerX.equalTo(self.mas_centerX);
             make.width.equalTo(@30);
             make.height.equalTo(@30);
