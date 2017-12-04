@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   s.compiler_flags	= '-fmodules'
   s.frameworks		= 'UIKit'
 
-  s.dependency		  'Masonry', '~> 0.6.1'
+  s.dependency		  'Masonry', '~> 1.1.0'
   s.source_files	= 'jot/*.{h,m}'
   s.resources = 'jot/jot.bundle'
 
