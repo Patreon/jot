@@ -134,9 +134,9 @@
                                                           
                                                           CGFloat centerAboveKeyboard = keyboardRectEnd.origin.y / 2;
                                                           
-                                                          [self.textView mas_makeConstraints:^(MASConstraintMaker *make) {
+                                                          [self.textView mas_updateConstraints:^(MASConstraintMaker *make) {
                                                               make.top.equalTo(@(centerAboveKeyboard));
-                                                            }];
+                                                          }];
 
                                                           [UIView animateWithDuration:duration
                                                                                 delay:0.f
