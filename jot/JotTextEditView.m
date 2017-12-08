@@ -85,10 +85,14 @@
             UIView *buttonView = [[UIView alloc] initWithFrame:CGRectMake(0,0,40,40)];
             [buttonView addSubview:colorButton];
             [colorSelectorItems addObject:[[UIBarButtonItem alloc] initWithCustomView:buttonView]];
+
+            // Add a UIBarButtonItem with FlexibleSpace to evenly distribute BarButtons across UIToolbar
+            [colorSelectorItems addObject:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil]];
         }
+
         [colorSelector setItems:colorSelectorItems animated:NO];
         self.textView.inputAccessoryView = colorSelector;
-        
+
         self.backgroundColorMode = [[TextColorModeButton alloc] init];
         self.backgroundColorMode.hidden = YES;
         self.backgroundColorMode.enabled = NO;
