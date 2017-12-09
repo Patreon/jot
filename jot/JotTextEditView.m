@@ -76,7 +76,7 @@
         [colorSelector setShadowImage:[UIImage new]
                 forToolbarPosition:UIBarPositionAny];
       
-        NSArray *colors = @[[UIColor whiteColor],[UIColor jotBlack],[UIColor jotBlue],[UIColor jotGreen],[UIColor jotYellow],[UIColor jotCoral],[UIColor jotPurple]];
+        NSArray *colors = @[[UIColor whiteColor],[UIColor jotNavy],[UIColor jotBlue],[UIColor jotGreen], [UIColor jotTurquoise], [UIColor jotSalmon], [UIColor jotCoral]];
         NSMutableArray *colorSelectorItems = [[NSMutableArray alloc] init];
         for (UIColor *color in colors) {
             CircleLineButton *colorButton = [[CircleLineButton alloc] initWithFrame:CGRectMake(0,0,35,35)];
@@ -336,7 +336,7 @@
     switch (self.backgroundColorMode.colorMode) {
         case JOTTextColorModeOpaqueBackground:
             if ([button.color isEqual:[UIColor whiteColor]]) {
-                self.textColor = [UIColor jotBlack];
+                self.textColor = [UIColor jotNavy];
             } else {
                 self.textColor = [UIColor whiteColor];
             }
@@ -347,7 +347,7 @@
         
         case JOTTextColorModeTransparentBackground:
             if ([button.color isEqual:[UIColor whiteColor]]) {
-                self.textColor = [UIColor jotBlack];
+                self.textColor = [UIColor jotNavy];
             } else {
                 self.textColor = [UIColor whiteColor];
             }
@@ -372,7 +372,7 @@
     
     switch (self.backgroundColorMode.colorMode) {
         case JOTTextColorModeOpaqueBackground:
-            self.textColor = [UIColor jotBlack];
+            self.textColor = [UIColor jotNavy];
             self.backgroundColor = [UIColor.whiteColor colorWithAlphaComponent:1.0];
             break;
             
