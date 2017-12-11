@@ -14,6 +14,8 @@
 
 #import "UIColor+Jot.h"
 
+static const NSUInteger kCharachterLimit = 140;
+
 @interface JotTextEditView () <UITextViewDelegate>
 
 @property (nonatomic, strong) UITextView *textView;
@@ -316,7 +318,7 @@
         return NO;
     }
     
-    if (textView.text.length + (text.length - range.length) > 70) {
+    if (textView.text.length + (text.length - range.length) > kCharachterLimit) {
         return NO;
     }
     
