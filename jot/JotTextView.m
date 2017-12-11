@@ -9,7 +9,7 @@
 #import "JotTextView.h"
 
 static const CGFloat kTextMargin = 10.f;
-static const CGFloat kCornerRadius = 8.f;
+static const CGFloat kCornerRadius = 5.f;
 
 @interface JotTextView ()
 
