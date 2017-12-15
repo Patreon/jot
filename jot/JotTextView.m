@@ -36,7 +36,7 @@ static const CGFloat kCornerRadius = 5.f;
         
         _initialTextInsets = UIEdgeInsetsMake(0.f, 0.f, 0.f, 0.f);
         
-        _fontSize = 60.f;
+        _fontSize = 24.f;
         _scale = 1.f;
         _font = [UIFont systemFontOfSize:self.fontSize];
         _textAlignment = NSTextAlignmentCenter;

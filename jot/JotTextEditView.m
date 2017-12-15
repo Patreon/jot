@@ -14,7 +14,7 @@
 
 #import "UIColor+Jot.h"
 
-static const NSUInteger kCharachterLimit = 140;
+static const NSUInteger kCharacterLimit = 140;
 
 @interface JotTextEditView () <UITextViewDelegate>
 
@@ -78,7 +78,7 @@ static const NSUInteger kCharachterLimit = 140;
         [colorSelector setShadowImage:[UIImage new]
                 forToolbarPosition:UIBarPositionAny];
       
-        NSArray *colors = @[[UIColor whiteColor],[UIColor jotNavy],[UIColor jotBlue],[UIColor jotGreen], [UIColor jotTurquoise], [UIColor jotSalmon], [UIColor jotCoral]];
+        NSArray *colors = @[[UIColor whiteColor], [UIColor patreonNavy], [UIColor patreonBlue], [UIColor patreonGreen], [UIColor patreonTurquoise], [UIColor patreonSalmon], [UIColor patreonCoral]];
         NSMutableArray *colorSelectorItems = [[NSMutableArray alloc] init];
         for (UIColor *color in colors) {
             CircleLineButton *colorButton = [[CircleLineButton alloc] initWithFrame:CGRectMake(0,0,35,35)];
@@ -318,7 +318,7 @@ static const NSUInteger kCharachterLimit = 140;
         return NO;
     }
     
-    if (textView.text.length + (text.length - range.length) > kCharachterLimit) {
+    if (textView.text.length + (text.length - range.length) > kCharacterLimit) {
         return NO;
     }
     
@@ -338,7 +338,7 @@ static const NSUInteger kCharachterLimit = 140;
     switch (self.backgroundColorMode.colorMode) {
         case JOTTextColorModeOpaqueBackground:
             if ([button.color isEqual:[UIColor whiteColor]]) {
-                self.textColor = [UIColor jotNavy];
+                self.textColor = [UIColor patreonNavy];
             } else {
                 self.textColor = [UIColor whiteColor];
             }
@@ -349,7 +349,7 @@ static const NSUInteger kCharachterLimit = 140;
         
         case JOTTextColorModeTransparentBackground:
             if ([button.color isEqual:[UIColor whiteColor]]) {
-                self.textColor = [UIColor jotNavy];
+                self.textColor = [UIColor patreonNavy];
             } else {
                 self.textColor = [UIColor whiteColor];
             }
@@ -374,7 +374,7 @@ static const NSUInteger kCharachterLimit = 140;
     
     switch (self.backgroundColorMode.colorMode) {
         case JOTTextColorModeOpaqueBackground:
-            self.textColor = [UIColor jotNavy];
+            self.textColor = [UIColor patreonNavy];
             self.backgroundColor = [UIColor.whiteColor colorWithAlphaComponent:1.0];
             break;
             
