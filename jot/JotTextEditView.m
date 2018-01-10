@@ -214,6 +214,9 @@ static const NSUInteger kCharacterLimit = 140;
     if (_textColor != textColor) {
         _textColor = textColor;
         self.textView.textColor = textColor;
+
+        // We set the tint/cursor to the same color as the text
+        self.textView.tintColor = textColor;
     }
 }
 
