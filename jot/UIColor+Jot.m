@@ -13,28 +13,28 @@
 
 @implementation UIColor (Jot)
 
-+ (UIColor *)jotBlack {
-    return UIColorFromRGB(0x4A4A4A);
++ (UIColor *)patreonNavy {
+    return UIColorFromRGB(0x052D49);
 }
 
-+ (UIColor *)jotBlue {
-    return UIColorFromRGB(0x4A90E2);
++ (UIColor *)patreonBlue {
+    return UIColorFromRGB(0x358EFF);
 }
 
-+ (UIColor *)jotGreen {
-    return UIColorFromRGB(0x7ED321);
++ (UIColor *)patreonGreen {
+    return UIColorFromRGB(0x63D6A3);
 }
 
-+ (UIColor *)jotYellow {
-    return UIColorFromRGB(0xF8E81C);
++ (UIColor *)patreonTurquoise {
+    return UIColorFromRGB(0x006375);
 }
 
-+ (UIColor *)jotCoral {
-    return UIColorFromRGB(0xF5A623);
++ (UIColor *)patreonCoral {
+    return UIColorFromRGB(0xF96854);
 }
 
-+ (UIColor *)jotPurple {
-    return UIColorFromRGB(0xBD10E0);
++ (UIColor *)patreonSalmon {
+    return UIColorFromRGB(0xFF9B7A);
 }
 
 @end

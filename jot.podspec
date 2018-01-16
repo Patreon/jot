@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name		= "jot"
-  s.version		= "0.1.5"
+  s.version		= "0.1.6"
   s.summary		= "An easy way to add drawings and text to images"
   s.homepage		= "https://github.com/IFTTT/jot"
   s.license		= 'MIT'
@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   s.compiler_flags	= '-fmodules'
   s.frameworks		= 'UIKit'
 
-  s.dependency		  'Masonry', '~> 0.6.1'
+  s.dependency		  'Masonry', '~> 1.1.0'
   s.source_files	= 'jot/*.{h,m}'
   s.resources = 'jot/jot.bundle'
 

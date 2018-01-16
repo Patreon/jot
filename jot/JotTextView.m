@@ -8,6 +8,9 @@
 
 #import "JotTextView.h"
 
+static const CGFloat kTextMargin = 10.f;
+static const CGFloat kCornerRadius = 5.f;
+
 @interface JotTextView ()
 
 @property (nonatomic, strong) UILabel *textLabel;
@@ -33,7 +36,7 @@
         
         _initialTextInsets = UIEdgeInsetsMake(0.f, 0.f, 0.f, 0.f);
         
-        _fontSize = 60.f;
+        _fontSize = 24.f;
         _scale = 1.f;
         _font = [UIFont systemFontOfSize:self.fontSize];
         _textAlignment = NSTextAlignmentCenter;
@@ -47,7 +50,7 @@
         self.textLabel.textColor = self.textColor;
         self.textLabel.textAlignment = self.textAlignment;
         self.textLabel.clipsToBounds = YES;
-        self.textLabel.layer.cornerRadius = 5;
+        self.textLabel.layer.cornerRadius = kCornerRadius;
         self.textLabel.center = CGPointMake(CGRectGetMidX([UIScreen mainScreen].bounds),
                                             CGRectGetMidY([UIScreen mainScreen].bounds));
         self.referenceCenter = CGPointZero;
@@ -105,11 +108,12 @@
         CGPoint labelCenter = self.textLabel.center;
         CGRect scaledLabelFrame = CGRectMake(0.f,
                                              0.f,
-                                             CGRectGetWidth(_labelFrame) * _scale * 1.05f,
-                                             CGRectGetHeight(_labelFrame) * _scale * 1.05f);
+                                             (CGRectGetWidth(_labelFrame) * _scale) + kTextMargin,
+                                             (CGRectGetHeight(_labelFrame) * _scale) + kTextMargin);
         CGFloat currentFontSize = self.fontSize * _scale;
         self.textLabel.font = [self.font fontWithSize:currentFontSize];
         self.textLabel.frame = scaledLabelFrame;
+        self.textLabel.layer.cornerRadius = _scale * kCornerRadius;
         self.textLabel.center = labelCenter;
         self.textLabel.transform = self.currentRotateTransform;
     }
@@ -180,10 +184,11 @@
         CGPoint labelCenter = self.textLabel.center;
         CGRect scaledLabelFrame = CGRectMake(0.f,
                                              0.f,
-                                             CGRectGetWidth(_labelFrame) * _scale * 1.05f,
-                                             CGRectGetHeight(_labelFrame) * _scale * 1.05f);
+                                             (CGRectGetWidth(_labelFrame) * _scale) + kTextMargin,
+                                             (CGRectGetHeight(_labelFrame) * _scale) + kTextMargin);
         CGAffineTransform labelTransform = self.textLabel.transform;
         self.textLabel.transform = CGAffineTransformIdentity;
+        self.textLabel.layer.cornerRadius = _scale * kCornerRadius;
         self.textLabel.frame = scaledLabelFrame;
         self.textLabel.transform = labelTransform;
         self.textLabel.center = labelCenter;
@@ -223,8 +228,8 @@
     CGSize originalSize = [temporarySizingLabel sizeThatFits:insetViewRect.size];
     temporarySizingLabel.frame = CGRectMake(0.f,
                                             0.f,
-                                            originalSize.width * 1.05f,
-                                            originalSize.height * 1.05f);
+                                            originalSize.width + kTextMargin,
+                                            originalSize.height + kTextMargin);
     temporarySizingLabel.center = self.textLabel.center;
     self.labelFrame = temporarySizingLabel.frame;
 }

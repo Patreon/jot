@@ -10,11 +10,11 @@
 
 @interface UIColor (Jot)
 
-+ (UIColor *)jotBlack;
-+ (UIColor *)jotBlue;
-+ (UIColor *)jotGreen;
-+ (UIColor *)jotYellow;
-+ (UIColor *)jotCoral;
-+ (UIColor *)jotPurple;
++ (UIColor *)patreonNavy;
++ (UIColor *)patreonBlue;
++ (UIColor *)patreonGreen;
++ (UIColor *)patreonTurquoise;
++ (UIColor *)patreonCoral;
++ (UIColor *)patreonSalmon;
 
 @end

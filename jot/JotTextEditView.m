@@ -14,6 +14,8 @@
 
 #import "UIColor+Jot.h"
 
+static const NSUInteger kCharacterLimit = 140;
+
 @interface JotTextEditView () <UITextViewDelegate>
 
 @property (nonatomic, strong) UITextView *textView;
@@ -76,7 +78,7 @@
         [colorSelector setShadowImage:[UIImage new]
                 forToolbarPosition:UIBarPositionAny];
       
-        NSArray *colors = @[[UIColor whiteColor],[UIColor jotBlack],[UIColor jotBlue],[UIColor jotGreen],[UIColor jotYellow],[UIColor jotCoral],[UIColor jotPurple]];
+        NSArray *colors = @[[UIColor whiteColor], [UIColor patreonNavy], [UIColor patreonBlue], [UIColor patreonGreen], [UIColor patreonTurquoise], [UIColor patreonSalmon], [UIColor patreonCoral]];
         NSMutableArray *colorSelectorItems = [[NSMutableArray alloc] init];
         for (UIColor *color in colors) {
             CircleLineButton *colorButton = [[CircleLineButton alloc] initWithFrame:CGRectMake(0,0,35,35)];
@@ -85,17 +87,26 @@
             UIView *buttonView = [[UIView alloc] initWithFrame:CGRectMake(0,0,40,40)];
             [buttonView addSubview:colorButton];
             [colorSelectorItems addObject:[[UIBarButtonItem alloc] initWithCustomView:buttonView]];
+
+            // Add a UIBarButtonItem with FlexibleSpace to evenly distribute BarButtons across UIToolbar
+            [colorSelectorItems addObject:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil]];
         }
+
         [colorSelector setItems:colorSelectorItems animated:NO];
         self.textView.inputAccessoryView = colorSelector;
-        
+
         self.backgroundColorMode = [[TextColorModeButton alloc] init];
         self.backgroundColorMode.hidden = YES;
         self.backgroundColorMode.enabled = NO;
         [self addSubview:self.backgroundColorMode];
         [self.backgroundColorMode addTarget:self action:@selector(changeBackgroundColor:) forControlEvents:UIControlEventTouchDown];
         [self.backgroundColorMode mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(self).offset(20.f);
+            // Respect safeArea on iOS11
+            if (@available(iOS 11.0, *)) {
+              make.top.equalTo(self.mas_safeAreaLayoutGuideTop).offset(20.f);
+            } else {
+              make.top.equalTo(self).offset(20.f);
+            }
             make.centerX.equalTo(self.mas_centerX);
             make.width.equalTo(@30);
             make.height.equalTo(@30);
@@ -129,9 +140,9 @@
                                                           
                                                           CGFloat centerAboveKeyboard = keyboardRectEnd.origin.y / 2;
                                                           
-                                                          [self.textView mas_makeConstraints:^(MASConstraintMaker *make) {
+                                                          [self.textView mas_updateConstraints:^(MASConstraintMaker *make) {
                                                               make.top.equalTo(@(centerAboveKeyboard));
-                                                            }];
+                                                          }];
 
                                                           [UIView animateWithDuration:duration
                                                                                 delay:0.f
@@ -307,7 +318,7 @@
         return NO;
     }
     
-    if (textView.text.length + (text.length - range.length) > 70) {
+    if (textView.text.length + (text.length - range.length) > kCharacterLimit) {
         return NO;
     }
     
@@ -327,7 +338,7 @@
     switch (self.backgroundColorMode.colorMode) {
         case JOTTextColorModeOpaqueBackground:
             if ([button.color isEqual:[UIColor whiteColor]]) {
-                self.textColor = [UIColor jotBlack];
+                self.textColor = [UIColor patreonNavy];
             } else {
                 self.textColor = [UIColor whiteColor];
             }
@@ -338,7 +349,7 @@
         
         case JOTTextColorModeTransparentBackground:
             if ([button.color isEqual:[UIColor whiteColor]]) {
-                self.textColor = [UIColor jotBlack];
+                self.textColor = [UIColor patreonNavy];
             } else {
                 self.textColor = [UIColor whiteColor];
             }
@@ -363,7 +374,7 @@
     
     switch (self.backgroundColorMode.colorMode) {
         case JOTTextColorModeOpaqueBackground:
-            self.textColor = [UIColor jotBlack];
+            self.textColor = [UIColor patreonNavy];
             self.backgroundColor = [UIColor.whiteColor colorWithAlphaComponent:1.0];
             break;
             
