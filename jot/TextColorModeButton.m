@@ -10,6 +10,8 @@
 
 @interface TextColorModeButton ()
 
+@property (nonatomic, strong) NSBundle *bundle;
+
 @end
 
 @implementation TextColorModeButton
@@ -17,18 +19,12 @@
 - (id)init {
     self = [super init];
     if (self) {
+        NSBundle *bundle = [NSBundle bundleForClass:[self class]];
+        NSURL *url = [bundle URLForResource:@"jot" withExtension:@"bundle"];
+        self.bundle = [NSBundle bundleWithURL:url];
         
         self.colorMode = JOTTextColorModeOpaqueBackground;
-        
-        self.layer.cornerRadius = 4;
-        self.clipsToBounds = YES;
-        [self setTitle:@"A" forState:UIControlStateNormal];
-        [self.titleLabel setFont:[UIFont systemFontOfSize:16]];
-        [self setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        self.backgroundColor = [UIColor whiteColor];
-        self.titleEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5);
-        self.layer.borderColor = [UIColor whiteColor].CGColor;
-        self.layer.borderWidth = 3;
+        [self updateButton];
     }
     return self;
 }
@@ -61,19 +57,15 @@
     
     switch (self.colorMode) {
         case JOTTextColorModeOpaqueBackground:
-            [self setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-            self.backgroundColor = [UIColor whiteColor];
+            [self setBackgroundImage:[UIImage imageNamed:@"background-style-opaque" inBundle:self.bundle compatibleWithTraitCollection:nil] forState:UIControlStateNormal];
             break;
             
         case JOTTextColorModeTransparentBackground:
-            self.backgroundColor = [self.backgroundColor colorWithAlphaComponent:0.5];
-            self.layer.borderWidth = 0;
+            [self setBackgroundImage:[UIImage imageNamed:@"background-style-50-opacity" inBundle:self.bundle compatibleWithTraitCollection:nil] forState:UIControlStateNormal];
             break;
             
         case JOTTextColorModeClearBackground:
-            self.backgroundColor = [self.backgroundColor colorWithAlphaComponent:0.0];
-            [self setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-            self.layer.borderWidth = 3;
+            [self setBackgroundImage:[UIImage imageNamed:@"background-style-none" inBundle:self.bundle compatibleWithTraitCollection:nil] forState:UIControlStateNormal];
             break;
             
         default:
@@ -83,8 +75,6 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    
-
 }
 
 

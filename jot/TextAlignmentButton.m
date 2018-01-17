@@ -19,15 +19,12 @@
 - (id)init {
     self = [super init];
     if (self) {
-        
-        self.textAlignment = JOTTextAlignmentCenter;
-        
         NSBundle *bundle = [NSBundle bundleForClass:[self class]];
         NSURL *url = [bundle URLForResource:@"jot" withExtension:@"bundle"];
         self.bundle = [NSBundle bundleWithURL:url];
-        
-        UIImage *centerImage = [UIImage imageNamed:@"center" inBundle:self.bundle compatibleWithTraitCollection:nil];
-        [self setBackgroundImage:centerImage forState:UIControlStateNormal];
+
+        self.textAlignment = JOTTextAlignmentCenter;
+        [self updateButton];
     }
     return self;
 }
@@ -51,7 +48,6 @@
     }
     
     [self updateButton];
-    
 }
 
 - (void)updateButton {

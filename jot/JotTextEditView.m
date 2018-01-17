@@ -23,8 +23,10 @@ static const NSUInteger kCharacterLimit = 140;
 @property (nonatomic, strong) CAGradientLayer *gradientMask;
 @property (nonatomic, strong) CAGradientLayer *topGradient;
 @property (nonatomic, strong) CAGradientLayer *bottomGradient;
-@property (nonatomic, strong) TextColorModeButton *backgroundColorMode;
+@property (nonatomic, strong) UIButton *trashcanButton;
+@property (nonatomic, strong) UIButton *textAnnotationDoneButton;
 @property (nonatomic, strong) TextAlignmentButton *textAlignmentButton;
+@property (nonatomic, strong) TextColorModeButton *backgroundColorModeButton;
 
 @end
 
@@ -53,7 +55,7 @@ static const NSUInteger kCharacterLimit = 140;
       
         _textView = [UITextView new];
         self.textView.backgroundColor = self.backgroundColor;
-        self.textColor = [UIColor blackColor];
+        self.textColor = [UIColor patreonNavy];
         self.textView.text = self.textString;
         self.textView.keyboardType = UIKeyboardTypeDefault;
         self.textView.returnKeyType = UIReturnKeyDone;
@@ -95,12 +97,11 @@ static const NSUInteger kCharacterLimit = 140;
         [colorSelector setItems:colorSelectorItems animated:NO];
         self.textView.inputAccessoryView = colorSelector;
 
-        self.backgroundColorMode = [[TextColorModeButton alloc] init];
-        self.backgroundColorMode.hidden = YES;
-        self.backgroundColorMode.enabled = NO;
-        [self addSubview:self.backgroundColorMode];
-        [self.backgroundColorMode addTarget:self action:@selector(changeBackgroundColor:) forControlEvents:UIControlEventTouchDown];
-        [self.backgroundColorMode mas_makeConstraints:^(MASConstraintMaker *make) {
+        self.backgroundColorModeButton = [[TextColorModeButton alloc] init];
+        self.backgroundColorModeButton.hidden = YES;
+        [self addSubview:self.backgroundColorModeButton];
+        [self.backgroundColorModeButton addTarget:self action:@selector(changeBackgroundColor:) forControlEvents:UIControlEventTouchDown];
+        [self.backgroundColorModeButton mas_makeConstraints:^(MASConstraintMaker *make) {
             // Respect safeArea on iOS11
             if (@available(iOS 11.0, *)) {
               make.top.equalTo(self.mas_safeAreaLayoutGuideTop).offset(20.f);
@@ -114,14 +115,52 @@ static const NSUInteger kCharacterLimit = 140;
         
         self.textAlignmentButton = [[TextAlignmentButton alloc] init];
         self.textAlignmentButton.hidden = YES;
-        self.textAlignmentButton.enabled = NO;
         [self addSubview:self.textAlignmentButton];
         [self.textAlignmentButton addTarget:self action:@selector(changeTextAlignment) forControlEvents:UIControlEventTouchDown];
         [self.textAlignmentButton mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(self.backgroundColorMode.mas_bottom).offset(16.f);
+            make.top.equalTo(self.backgroundColorModeButton.mas_bottom).offset(16.f);
             make.centerX.equalTo(self.mas_centerX);
             make.width.equalTo(@32);
             make.height.equalTo(@20);
+        }];
+
+        NSBundle *bundle = [NSBundle bundleForClass:[self class]];
+        NSURL *url = [bundle URLForResource:@"jot" withExtension:@"bundle"];
+        
+        self.trashcanButton = [[UIButton alloc] init];
+        [self.trashcanButton setImage:[UIImage imageNamed:@"trashcan" inBundle:[NSBundle bundleWithURL:url] compatibleWithTraitCollection:nil] forState:UIControlStateNormal];
+        [self.trashcanButton addTarget:self action:@selector(deleteAnnotation) forControlEvents:UIControlEventTouchUpInside];
+        self.trashcanButton.hidden = YES;
+        [self addSubview:self.trashcanButton];
+
+        [self.trashcanButton mas_makeConstraints:^(MASConstraintMaker *make) {
+            // Respect safeArea on iOS11
+            if (@available(iOS 11.0, *)) {
+                make.top.equalTo(self.mas_safeAreaLayoutGuideTop).offset(24.f);
+            } else {
+                make.top.equalTo(self).offset(24.f);
+            }
+            make.leading.equalTo(@24);
+            make.width.equalTo(@24);
+            make.height.equalTo(@24);
+        }];
+        
+        self.textAnnotationDoneButton = [[UIButton alloc] init];
+        [self.textAnnotationDoneButton setImage:[UIImage imageNamed:@"done" inBundle:[NSBundle bundleWithURL:url] compatibleWithTraitCollection:nil] forState:UIControlStateNormal];
+        [self.textAnnotationDoneButton addTarget:self action:@selector(doneTapped) forControlEvents:UIControlEventTouchUpInside];
+        self.textAnnotationDoneButton.hidden = YES;
+        [self addSubview:self.textAnnotationDoneButton];
+        
+        [self.textAnnotationDoneButton mas_makeConstraints:^(MASConstraintMaker *make) {
+            // Respect safeArea on iOS11
+            if (@available(iOS 11.0, *)) {
+                make.top.equalTo(self.mas_safeAreaLayoutGuideTop).offset(24.f);
+            } else {
+                make.top.equalTo(self).offset(24.f);
+            }
+            make.trailing.equalTo(@-24);
+            make.width.equalTo(@46);
+            make.height.equalTo(@19);
         }];
         
         [[NSNotificationCenter defaultCenter] addObserverForName:UIKeyboardWillChangeFrameNotification
@@ -214,6 +253,9 @@ static const NSUInteger kCharacterLimit = 140;
     if (_textColor != textColor) {
         _textColor = textColor;
         self.textView.textColor = textColor;
+
+        // We set the tint/cursor to the same color as the text
+        self.textView.tintColor = textColor;
     }
 }
 
@@ -239,11 +281,11 @@ static const NSUInteger kCharacterLimit = 140;
     if (_isEditing != isEditing) {
         _isEditing = isEditing;
         self.textContainer.hidden = !isEditing;
-        self.backgroundColorMode.hidden = !isEditing;
-        self.backgroundColorMode.enabled = isEditing;
+        self.backgroundColorModeButton.hidden = !isEditing;
         self.textAlignmentButton.hidden = !isEditing;
-        self.textAlignmentButton.enabled = isEditing;
         self.userInteractionEnabled = isEditing;
+        self.trashcanButton.hidden = !isEditing;
+        self.textAnnotationDoneButton.hidden = !isEditing;
         if (isEditing) {
             [self.textView becomeFirstResponder];
         } else {
@@ -335,7 +377,7 @@ static const NSUInteger kCharacterLimit = 140;
 {
     CircleLineButton *button = (CircleLineButton *)sender;
     
-    switch (self.backgroundColorMode.colorMode) {
+    switch (self.backgroundColorModeButton.colorMode) {
         case JOTTextColorModeOpaqueBackground:
             if ([button.color isEqual:[UIColor whiteColor]]) {
                 self.textColor = [UIColor patreonNavy];
@@ -370,9 +412,9 @@ static const NSUInteger kCharacterLimit = 140;
 
 - (void)changeBackgroundColor:(id)sender
 {
-    [self.backgroundColorMode switchToNextColorMode];
+    [self.backgroundColorModeButton switchToNextColorMode];
     
-    switch (self.backgroundColorMode.colorMode) {
+    switch (self.backgroundColorModeButton.colorMode) {
         case JOTTextColorModeOpaqueBackground:
             self.textColor = [UIColor patreonNavy];
             self.backgroundColor = [UIColor.whiteColor colorWithAlphaComponent:1.0];
@@ -412,6 +454,15 @@ static const NSUInteger kCharacterLimit = 140;
         default:
             break;
     }
+}
+
+- (void)deleteAnnotation {
+    self.textString = @"";
+    self.isEditing = NO;
+}
+
+- (void)doneTapped {
+    self.isEditing = NO;
 }
 
 #pragma mark - Change textView sizing when text changess

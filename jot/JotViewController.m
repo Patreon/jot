@@ -13,6 +13,7 @@
 #import <Masonry/Masonry.h>
 #import "UIImage+Jot.h"
 #import "JotDrawingContainer.h"
+#import "UIColor+Jot.h"
 
 @interface JotViewController () <UIGestureRecognizerDelegate, JotTextEditViewDelegate, JotDrawingContainerDelegate>
 
@@ -49,7 +50,7 @@
         _textAlignment = self.textView.textAlignment;
         self.textEditView.textAlignment = NSTextAlignmentLeft;
         _textColor = self.textView.textColor;
-        self.textEditView.textColor = [UIColor blackColor];
+        self.textEditView.textColor = [UIColor patreonNavy];
         _textString = @"";
         _drawingColor = self.drawView.strokeColor;
         _drawingStrokeWidth = self.drawView.strokeWidth;
