@@ -135,7 +135,7 @@ static const NSUInteger kCharacterLimit = 140;
                                                           NSTimeInterval duration = [note.userInfo[UIKeyboardAnimationDurationUserInfoKey] floatValue];
                                                           
                                                           [self.textContainer mas_updateConstraints:^(MASConstraintMaker *make) {
-                                                              make.bottom.equalTo(self).offset(-CGRectGetHeight(keyboardRectEnd));
+                                                              make.top.equalTo(self).offset(-70);
                                                           }];
                                                           
                                                           CGFloat centerAboveKeyboard = keyboardRectEnd.origin.y / 2;
