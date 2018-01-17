@@ -26,7 +26,7 @@ static const NSUInteger kCharacterLimit = 140;
 @property (nonatomic, strong) UIButton *trashcanButton;
 @property (nonatomic, strong) UIButton *textAnnotationDoneButton;
 @property (nonatomic, strong) TextAlignmentButton *textAlignmentButton;
-@property (nonatomic, strong) TextColorModeButton *backgroundColorMode;
+@property (nonatomic, strong) TextColorModeButton *backgroundColorModeButton;
 
 @end
 
@@ -97,11 +97,11 @@ static const NSUInteger kCharacterLimit = 140;
         [colorSelector setItems:colorSelectorItems animated:NO];
         self.textView.inputAccessoryView = colorSelector;
 
-        self.backgroundColorMode = [[TextColorModeButton alloc] init];
-        self.backgroundColorMode.hidden = YES;
-        [self addSubview:self.backgroundColorMode];
-        [self.backgroundColorMode addTarget:self action:@selector(changeBackgroundColor:) forControlEvents:UIControlEventTouchDown];
-        [self.backgroundColorMode mas_makeConstraints:^(MASConstraintMaker *make) {
+        self.backgroundColorModeButton = [[TextColorModeButton alloc] init];
+        self.backgroundColorModeButton.hidden = YES;
+        [self addSubview:self.backgroundColorModeButton];
+        [self.backgroundColorModeButton addTarget:self action:@selector(changeBackgroundColor:) forControlEvents:UIControlEventTouchDown];
+        [self.backgroundColorModeButton mas_makeConstraints:^(MASConstraintMaker *make) {
             // Respect safeArea on iOS11
             if (@available(iOS 11.0, *)) {
               make.top.equalTo(self.mas_safeAreaLayoutGuideTop).offset(20.f);
@@ -118,7 +118,7 @@ static const NSUInteger kCharacterLimit = 140;
         [self addSubview:self.textAlignmentButton];
         [self.textAlignmentButton addTarget:self action:@selector(changeTextAlignment) forControlEvents:UIControlEventTouchDown];
         [self.textAlignmentButton mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(self.backgroundColorMode.mas_bottom).offset(16.f);
+            make.top.equalTo(self.backgroundColorModeButton.mas_bottom).offset(16.f);
             make.centerX.equalTo(self.mas_centerX);
             make.width.equalTo(@32);
             make.height.equalTo(@20);
@@ -281,7 +281,7 @@ static const NSUInteger kCharacterLimit = 140;
     if (_isEditing != isEditing) {
         _isEditing = isEditing;
         self.textContainer.hidden = !isEditing;
-        self.backgroundColorMode.hidden = !isEditing;
+        self.backgroundColorModeButton.hidden = !isEditing;
         self.textAlignmentButton.hidden = !isEditing;
         self.userInteractionEnabled = isEditing;
         self.trashcanButton.hidden = !isEditing;
@@ -377,7 +377,7 @@ static const NSUInteger kCharacterLimit = 140;
 {
     CircleLineButton *button = (CircleLineButton *)sender;
     
-    switch (self.backgroundColorMode.colorMode) {
+    switch (self.backgroundColorModeButton.colorMode) {
         case JOTTextColorModeOpaqueBackground:
             if ([button.color isEqual:[UIColor whiteColor]]) {
                 self.textColor = [UIColor patreonNavy];
@@ -412,9 +412,9 @@ static const NSUInteger kCharacterLimit = 140;
 
 - (void)changeBackgroundColor:(id)sender
 {
-    [self.backgroundColorMode switchToNextColorMode];
+    [self.backgroundColorModeButton switchToNextColorMode];
     
-    switch (self.backgroundColorMode.colorMode) {
+    switch (self.backgroundColorModeButton.colorMode) {
         case JOTTextColorModeOpaqueBackground:
             self.textColor = [UIColor patreonNavy];
             self.backgroundColor = [UIColor.whiteColor colorWithAlphaComponent:1.0];
